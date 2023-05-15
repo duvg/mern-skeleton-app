@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import crypto from 'crypto';
 
 const UserSchema = new mongoose.Schema({
   name: {
@@ -9,7 +10,8 @@ const UserSchema = new mongoose.Schema({
   email: {
     type: String,
     trim: true,
-    unique: 'Email already exists',
+    unique: true,
+    index: true,
     math: [/.+\@.+\..+/, 'Please fill a valid email address'],
     required: 'Email is required'
   },
@@ -23,7 +25,9 @@ const UserSchema = new mongoose.Schema({
     required: 'Password is required'
   },
   salt: String
-}).virtual('password')
+});
+
+UserSchema.virtual('password')
   .set(function(password){
     this._password = password;
     this.salt = this.makeSalt();
@@ -35,16 +39,15 @@ const UserSchema = new mongoose.Schema({
 
 UserSchema.path('hashed_password').validate(function(v) {
   if (this._password && this._password.length < 6) {
-    this.invalidate('password', 'Password must be at least 6 characters.');
+    this.invalidate('password', 'Password must be at least 6 characters.')
   }
-
   if (this.isNew && !this._password) {
-    this.invalidate('password', 'Password in required!');
+    this.invalidate('password', 'Password is required')
   }
-}, null);
+}, null)
 
 UserSchema.methods = {
-  autenticate: function(plainText) {
+  authenticate: function(plainText) {
     return this.encryptPassword(plainText) === this.hashed_password;
   },
   encryptPassword: function(password) {
