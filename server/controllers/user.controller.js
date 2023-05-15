@@ -1,5 +1,5 @@
 import User from '../models/user.model';
-import extend from 'lodash';
+import merge from 'lodash/merge';
 import errorHandler from './../helpers/dbErrorHandler';
 
 const create = async (req, res) => {
@@ -29,7 +29,7 @@ const list = async (req, res) => {
 
 const userById = async (req, res, next, id) => {
   try {
-    let user = await User.findOne({_id: id});
+    let user = await User.findById({_id: id});
     if(!user) {
       return res.status(400).json({
         error: 'User not found'
@@ -51,16 +51,19 @@ const read = (req, res) => {
   req.name = 'ss';
   return res.json(req.profile);
 };
+
 const update = async (req, res, next) => {
   try {
     let user = req.profile;
-    user = extend(user, req.body);
+    user = merge(user, req.body);
+
     user.updated = Date.now();
     await user.save();
     user.hashed_password = '';
     user.salt = '';
     res.json(user);
   } catch (err) {
+    console.log(err);
     return res.status(400).json({
       error: errorHandler.getErrorMessage(err)
     });
@@ -69,12 +72,15 @@ const update = async (req, res, next) => {
 
 const remove = async (req, res, next) => {
   try {
+    console.log('deleted');
     let user = req.profile;
-    let deleteUser =  await user.remove();
+    console.log('user to remove', user);
+    let deletedUser = await user.deleteOne();
     deletedUser.hashed_password = '';
-    deleteUser.salt = '';
+    deletedUser.salt = '';
     res.json(deletedUser);
   } catch(err) {
+    console.log(err);
     return res.status(400).json({
       error: errorHandler.getErrorMessage(err)
     });
