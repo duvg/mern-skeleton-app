@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import crypto from 'crypto';
 
-const UserSchema = new mongoose.Schema({
+const UserSchema = new mongoose.Schema([{
   name: {
     type: String,
     trim: true,
@@ -25,7 +25,7 @@ const UserSchema = new mongoose.Schema({
     required: 'Password is required'
   },
   salt: String
-});
+}]);
 
 UserSchema.virtual('password')
   .set(function(password){
