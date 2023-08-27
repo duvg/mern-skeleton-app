@@ -1,11 +1,20 @@
 import React, { useState } from 'react';
-import { signin } from './api-auth';
+import { Navigate } from 'react-router-dom';
+import {
+  Button,
+  Card,
+  CardActions,
+  CardContent,
+  Icon,
+  TextField,
+  Typography,
+  makeStyles
+} from '@material-ui/core';
+import { useLocation } from 'react-router';
 import auth from './auth-helper';
-import {Navigate} from 'react-router-dom';
-import { Button, Card, CardActions, CardContent, Icon, TextField, Typography, makeStyles } from '@material-ui/core';
-import { useLocation, withRouter } from 'react-router';
+import { signin } from './api-auth';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   card: {
     maxWidth: 600,
     margin: 'auto',
@@ -29,9 +38,9 @@ const useStyles = makeStyles(theme => ({
     margin: 'auto',
     marginBottom: theme.spacing(2)
   }
-}))
+}));
 
-const Signin = props => {
+function Signin() {
   const location = useLocation();
   const classes = useStyles();
   const [values, setValues] = useState({
@@ -41,73 +50,83 @@ const Signin = props => {
     redirectToReferrer: false
   });
 
-  const handleChange = name => event => {
+  const handleChange = (name) => (event) => {
     setValues({ ...values, [name]: event.target.value });
-  }
+  };
 
   const handleSubmit = () => {
     const user = {
       email: values.email || undefined,
       password: values.password || undefined
-    }
+    };
 
     signin(user).then((data) => {
       if (data.error) {
-        setValues({...values, error: data.error })
+        setValues({ ...values, error: data.error });
       } else {
         auth.authenticate(data, () => {
-          setValues({ ...values, error: '', redirectToReferrer: true })
-        })
+          setValues({
+            ...values,
+            error: '',
+            redirectToReferrer: true
+          });
+        });
       }
-    })
-  }
+    });
+  };
 
   const { from } = location.state || {
-    from : {
+    from: {
       pathname: '/'
     }
-  }
+  };
 
   const { redirectToReferrer } = values;
-  if(redirectToReferrer) {
-    return <Navigate to={from} />
+  if (redirectToReferrer) {
+    return <Navigate to={from} />;
   }
 
   return (
-    <>
-      <Card className={classes.card}>
-        <CardContent>
-          <Typography variant='h6' className={classes.title}>
-            Sign In
+    <Card className={classes.card}>
+      <CardContent>
+        <Typography variant="h6" className={classes.title}>
+          Sign In
+        </Typography>
+        <TextField
+          id="email"
+          label="email"
+          className={classes.textField}
+          value={values.email}
+          onChange={handleChange('email')}
+        />
+        <br />
+        <TextField
+          id="password"
+          label="password"
+          type="password"
+          className={classes.textField}
+          value={values.password}
+          onChange={handleChange('password')}
+        />
+        <br />
+        {values.error && (
+          <Typography component="p" color="error">
+            <Icon color="error" className={classes.error}>
+              error
+            </Icon>
           </Typography>
-          <TextField
-            id='email'
-            label='email'
-            className={classes.textField}
-            value={values.email}
-            onChange={handleChange('email')}
-          />
-          <br/>
-          <TextField
-            id='password'
-            label='password'
-            type='password'
-            className={classes.textField}
-            value={values.password}
-            onChange={handleChange('password')}
-          />
-          <br/>
-          {
-            values.error && (<Typography component='p' color='error'>
-              <Icon color='error' className={classes.error}>error</Icon>
-            </Typography>)
-          }
-        </CardContent>
-        <CardActions>
-          <Button color='primary' variant='contained' onClick={handleSubmit}>Sign in</Button>
-        </CardActions>
-      </Card>
-    </>
+        )}
+      </CardContent>
+      <CardActions>
+        <Button
+          color="primary"
+          variant="contained"
+          onClick={handleSubmit}
+        >
+          Sign in
+        </Button>
+      </CardActions>
+    </Card>
   );
 }
 

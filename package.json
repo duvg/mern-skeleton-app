@@ -10,13 +10,16 @@
   },
   "devDependencies": {
     "@babel/core": "^7.21.8",
+    "@babel/eslint-parser": "^7.22.5",
     "@babel/preset-env": "^7.21.5",
     "@babel/preset-react": "^7.18.6",
+    "babel-eslint": "^10.1.0",
     "babel-loader": "^9.1.2",
     "eslint": "^8.41.0",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-prettier": "^8.8.0",
     "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-react": "^7.32.2",
     "file-loader": "^6.2.0",
     "install-peerdeps": "^3.0.3",
     "nodemon": "^2.0.22",
@@ -37,6 +40,7 @@
     "cors": "^2.8.5",
     "express": "^4.18.2",
     "express-jwt": "^8.4.1",
+    "formidable": "^2.1.1",
     "helmet": "^7.0.0",
     "jsonwebtoken": "^9.0.0",
     "lodash": "^4.17.21",
@@ -46,6 +50,7 @@
     "react-dom": "^18.2.0",
     "react-hot-loader": "^4.13.1",
     "react-router": "^6.11.1",
-    "react-router-dom": "^6.11.1"
+    "react-router-dom": "^6.11.1",
+    "standard": "^17.1.0"
   }
 }

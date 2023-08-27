@@ -11,17 +11,19 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Typography from '@material-ui/core/Typography';
 import ArrowForward from '@material-ui/icons/ArrowForward';
 import Person from '@material-ui/icons/Person';
-import { list } from './api-user';
 import { Link } from 'react-router-dom';
+import { list } from './api-user';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   card: {
     maxWidth: 600,
     margin: 'auto',
     marginTop: theme.spacing(2)
   },
   title: {
-    padding: `${theme.spacing(3)}px ${theme.spacing(2)}px ${theme.spacing(2)}px`,
+    padding: `${theme.spacing(3)}px ${theme.spacing(
+      2
+    )}px ${theme.spacing(2)}px`,
     color: theme.palette.openTitle
   },
   media: {
@@ -29,26 +31,25 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const Users = () => {
+function Users() {
   const classes = useStyles();
   const [users, setUsers] = useState([]);
 
   useEffect(() => {
     const abortController = new AbortController();
-    const signal = abortController.signal;
-
+    const { signal } = abortController;
 
     list(signal).then((data) => {
       if (data && data.error) {
-        console.log('Error::: ', error);
+        console.log('Error::: ', data.error);
       } else {
-        setUsers(data)
+        setUsers(data);
       }
-    })
+    });
 
     return () => {
       abortController.abort();
-    }
+    };
   }, []);
 
   return (
@@ -57,26 +58,26 @@ const Users = () => {
         All Users
       </Typography>
       <List dense>
-        {users.map((item) => {
-          return <Link to={"/users/" + item._id} key={item._id}>
+        {users.map((item) => (
+          <Link to={`/users/${item._id}`} key={item._id}>
             <ListItem button>
               <ListItemAvatar>
                 <Avatar>
                   <Person />
                 </Avatar>
               </ListItemAvatar>
-              <ListItemText primary={item.name}/>
+              <ListItemText primary={item.name} />
               <ListItemSecondaryAction>
                 <IconButton>
-                  <ArrowForward/>
+                  <ArrowForward />
                 </IconButton>
               </ListItemSecondaryAction>
             </ListItem>
           </Link>
-        })}
+        ))}
       </List>
     </Paper>
   );
-};
+}
 
 export default Users;

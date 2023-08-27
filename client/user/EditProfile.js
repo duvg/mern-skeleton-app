@@ -1,10 +1,28 @@
 import React, { useState } from 'react';
-import {read, update} from './api-user';
-import { Card, Button, CardActions, CardContent, Dialog, DialogActions, DialogContent, DialogTitle, Icon, TextField, Typography, makeStyles } from '@material-ui/core';
-import { Link, Navigate, useLocation, useParams } from 'react-router-dom';
+import {
+  Card,
+  Button,
+  CardActions,
+  CardContent,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Icon,
+  TextField,
+  Typography,
+  makeStyles
+} from '@material-ui/core';
+import {
+  Link,
+  Navigate,
+  useLocation,
+  useParams
+} from 'react-router-dom';
+import { read, update } from './api-user';
 import auth from '../auth/auth-helper';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   card: {
     maxWidth: 600,
     margin: 'auto',
@@ -30,9 +48,9 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const EditProfile = () => {
+function EditProfile() {
   const location = useLocation();
-  const {userId} = useParams();
+  const { userId } = useParams();
   const classes = useStyles();
 
   const [values, setValues] = useState({
@@ -44,9 +62,9 @@ const EditProfile = () => {
     redirectToProfile: false
   });
 
-  const handleChange = name => event => {
+  const handleChange = (name) => (event) => {
     setValues({ ...values, [name]: event.target.value });
-  }
+  };
 
   const handleSubmit = () => {
     const jwt = auth.isAuthenticated();
@@ -55,87 +73,104 @@ const EditProfile = () => {
       email: values.email || undefined,
       password: values.password || undefined
     };
-    update({
-      userId: userId
-    }, {
-      token: jwt.token
-    }, user).then((data) => {
+    update(
+      {
+        userId
+      },
+      {
+        token: jwt.token
+      },
+      user
+    ).then((data) => {
       if (data && data.error) {
-        setValues({...values, error: data.error})
+        setValues({ ...values, error: data.error });
       } else {
-        setValues({...values, userId: data._id, redirectToProfile: true})
+        setValues({
+          ...values,
+          userId: data._id,
+          redirectToProfile: true
+        });
       }
-    })
+    });
   };
 
-  const {from} = location.state || {
+  const { from } = location.state || {
     from: {
-      pathname: '/profile/' + userId
+      pathname: `/profile/${userId}`
     }
-  }
+  };
 
   const { redirectToProfile } = values;
-  if(redirectToProfile) {
-    return <Navigate to={from} />
+  if (redirectToProfile) {
+    return <Navigate to={from} />;
   }
 
   return (
     <>
       <Card className={classes.card}>
         <CardContent>
-          <Typography variant='h6' className={classes.title}>
+          <Typography variant="h6" className={classes.title}>
             Edit profile
           </Typography>
           <TextField
-            id='name'
-            label='Name'
+            id="name"
+            label="Name"
             className={classes.textField}
             value={values.name}
             onChange={handleChange('name')}
-            margin='normal'
+            margin="normal"
           />
-          <br/>
+          <br />
           <TextField
-            id='email'
-            type='email'
-            label='Email'
+            id="email"
+            type="email"
+            label="Email"
             value={values.email}
             onChange={handleChange('email')}
             className={classes.textField}
-            margin='normal'
+            margin="normal"
           />
-          <br/>
+          <br />
           <TextField
-            id='password'
-            name='password'
-            label='password'
-            type='password'
+            id="password"
+            name="password"
+            label="password"
+            type="password"
             value={values.password}
             className={classes.textField}
             onChange={handleChange('password')}
-            margin='normal'
+            margin="normal"
           />
-          <br/>
-          {
-            values.error && (<Typography variant='p' color='error'>
-              <Icon color='error' className={classes.error}>error</Icon>
-            </Typography>)
-          }
+          <br />
+          {values.error && (
+            <Typography variant="p" color="error">
+              <Icon color="error" className={classes.error}>
+                error
+              </Icon>
+            </Typography>
+          )}
         </CardContent>
         <CardActions>
-          <Button color='secondary' variant='contained'>Save changes</Button>
+          <Button color="secondary" variant="contained">
+            Save changes
+          </Button>
         </CardActions>
       </Card>
-      <Dialog open={values.open} onClose={(reason) => {
-        setOpen(false);
-      }}>
+      <Dialog
+        open={values.open}
+        onClose={(reason) => {
+          setOpen(false);
+        }}
+      >
         <DialogTitle>Edit User</DialogTitle>
-        <DialogContent>
-          Account has been updated!
-        </DialogContent>
+        <DialogContent>Account has been updated!</DialogContent>
         <DialogActions>
-          <Link to={'/profile/' + 1}>
-            <Button color='secondary' autoFocus='autoFocus' variant='contained'>
+          <Link to={`/profile/${1}`}>
+            <Button
+              color="secondary"
+              autoFocus="autoFocus"
+              variant="contained"
+            >
               Go to Profile
             </Button>
           </Link>
@@ -144,6 +179,5 @@ const EditProfile = () => {
     </>
   );
 }
-
 
 export default EditProfile;
