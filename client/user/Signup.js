@@ -1,9 +1,22 @@
 import React, { useState } from 'react';
-import {create} from './api-user';
-import { Button, Card, CardActions, CardContent, Dialog, DialogActions, DialogContent, DialogTitle, Icon, TextField, Typography, makeStyles } from '@material-ui/core';
+import {
+  Button,
+  Card,
+  CardActions,
+  CardContent,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Icon,
+  TextField,
+  Typography,
+  makeStyles
+} from '@material-ui/core';
 import { Link } from 'react-router-dom';
+import { create } from './api-user';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   card: {
     maxWidth: 600,
     margin: 'auto',
@@ -27,9 +40,9 @@ const useStyles = makeStyles(theme => ({
     margin: 'auto',
     marginBottom: theme.spacing(2)
   }
-}))
+}));
 
-const Signup = () => {
+function Signup() {
   const classes = useStyles();
 
   const [values, setValues] = useState({
@@ -40,9 +53,8 @@ const Signup = () => {
     error: ''
   });
 
-  const handleChange = name => event => {
-
-    setValues({ ...values, [name]: event.target.value })
+  const handleChange = (name) => (event) => {
+    setValues({ ...values, [name]: event.target.value });
   };
 
   const clickSubmit = () => {
@@ -53,72 +65,89 @@ const Signup = () => {
     };
 
     create(user).then((data) => {
-      if(data.error) {
+      if (data.error) {
         setValues({ ...values, error: data.error });
       } else {
         setValues({ ...values, error: '', open: true });
       }
-
-    })
-  }
+    });
+  };
 
   return (
     <>
       <Card className={classes.card}>
         <CardContent>
-          <Typography variant='h6' className={classes.title}>
+          <Typography variant="h6" className={classes.title}>
             Sign Up
           </Typography>
 
           <TextField
-            id='name'
-            label='Name'
+            id="name"
+            label="Name"
             className={classes.textField}
             value={values.name}
             onChange={handleChange('name')}
-            margin='normal'
+            margin="normal"
           />
           <TextField
-            id='email'
-            type='text'
-            label='Email'
+            id="email"
+            type="text"
+            label="Email"
             className={classes.textField}
             value={values.email}
             onChange={handleChange('email')}
           />
-          <br/>
+          <br />
           <TextField
-            id='password'
-            label='password'
-            type='password'
+            id="password"
+            label="password"
+            type="password"
             className={classes.textField}
             value={values.password}
             onChange={handleChange('password')}
-            margin='normal'
+            margin="normal"
           />
-          <br/>
-          {
-            values.error && (<Typography component="p" color="error">
-              <Icon color='error' className={classes.error}>error</Icon>
-            </Typography>)
-          }
+          <br />
+          {values.error && (
+            <Typography component="p" color="error">
+              <Icon color="error" className={classes.error}>
+                error
+              </Icon>
+            </Typography>
+          )}
         </CardContent>
         <CardActions>
-          <Button color='primary' variant='contained' onClick={clickSubmit}>Sign up</Button>
+          <Button
+            color="primary"
+            variant="contained"
+            onClick={clickSubmit}
+          >
+            Sign up
+          </Button>
         </CardActions>
       </Card>
-      <Dialog open={values.open} onClose={(reason) => {
-        if(reason !== 'backdropClick' && reason !== 'escapeKeyDown') {
-          setOpen(false);
-        }
-      }}>
+      <Dialog
+        open={values.open}
+        onClose={(reason) => {
+          if (
+            reason !== 'backdropClick' &&
+            reason !== 'escapeKeyDown'
+          ) {
+            setValues({ ...values, open: false });
+          }
+        }}
+      >
         <DialogTitle>New Account</DialogTitle>
         <DialogContent>
           New account successfully created.
         </DialogContent>
         <DialogActions>
           <Link to="/signin">
-            <Button color='primary' autoFocus='autoFocus' variant='contained'>
+            <Button
+              color="primary"
+              autoFocus="autoFocus"
+              variant="contained"
+            >
               Sign In
             </Button>
           </Link>
@@ -126,7 +155,6 @@ const Signup = () => {
       </Dialog>
     </>
   );
-
 }
 
 export default Signup;
