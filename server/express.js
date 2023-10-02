@@ -20,6 +20,8 @@ import devBundle from './devBundle';
 // Routes
 import authRoutes from './routes/auth.routes';
 import userRoutes from './routes/user.routes';
+import categoryRoutes from './routes/category.routes';
+
 
 import Template from './../template';
 
@@ -38,6 +40,7 @@ app.use(cors());
 app.use('/dist', express.static(path.join(CURRENT_WORKING_DIR, 'dist')));
 app.use('/', authRoutes);
 app.use('/', userRoutes);
+app.use('/', categoryRoutes);
 
 app.get('*', (req, res) => {
   const sheets = new ServerStyleSheets();
