@@ -60,7 +60,6 @@ const requireSignin = expressjwt({
 
 const hasAuthorization = (req, res, next) => {
   const authorized = req.profile && req.auth && req.profile._id == req.auth._id;
-  console.log('Duviel:', authorized);
   if (!(authorized)) {
     return res.status(404).json({
       error: "User is not authorized"
