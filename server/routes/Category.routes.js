@@ -3,7 +3,7 @@ import categoryCtrl from '../controllers/category.controller';
 
 const router = express.Router();
 
-router.router('/api/Categorys')
+router.route('/api/categories')
 .get(categoryCtrl.list)
 .post(categoryCtrl.create);
 
