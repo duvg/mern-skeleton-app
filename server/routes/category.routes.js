@@ -9,8 +9,6 @@ router.route('/api/categories')
   .post(categoryCtrl.create);
 
 router.route('/api/categories/:categoryId')
-  .get(authCtrl.requireSignin, categoryCtrl.read)
-  .put(authCtrl.requireSignin, authCtrl.hasAuthorization, categoryCtrl.update)
   .delete(authCtrl.requireSignin, authCtrl.hasAuthorization, categoryCtrl.remove);
 
 router.param('categoryId', categoryCtrl.categoryById);

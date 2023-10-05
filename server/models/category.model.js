@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import router from '../routes/category.routes';
 
 const CategorySchema = new mongoose.Schema([{
     name: {
@@ -8,13 +9,14 @@ const CategorySchema = new mongoose.Schema([{
     },
 
     description: {
-        type: Date,
+        type: String,
         required: 'Description is required'
     },
     created: {
-      type: Date,
-      default: Date.now
+      type: String,
+      default: String.now
     },
-    updated: Date,
+
     
 }]);
+ export default mongoose.model ('category', CategorySchema)

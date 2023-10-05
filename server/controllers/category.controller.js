@@ -4,14 +4,16 @@ import merge from 'lodash/merge';
 import dbErrorHandler from '../helpers/dbErrorHandler';
 
 const create = async (req, res) => {
-    const category = new category(req.body);
+    const category = new Category(req.body);
     try {
         await category.save();
         return res.status(200).json({
             message: 'Successfully signed up!'
         });
     } catch (err) {
+        console.log('error');
         return res.status(400).json({
+            
             error:dbErrorHandler.getUniqueErrorMessage(err)
         });
     }
