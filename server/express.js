@@ -22,6 +22,7 @@ import authRoutes from './routes/auth.routes';
 import userRoutes from './routes/user.routes';
 import categoryRoutes from './routes/Category.routes';
 import productRoutes from './routes/product.router';
+import paisRoutes from './routes/pais.router';
 
 import Template from './../template';
 
@@ -42,6 +43,7 @@ app.use('/', authRoutes);
 app.use('/', userRoutes);
 app.use('/', categoryRoutes);
 app.use('/', productRoutes);
+app.use('/', paisRoutes);
 
 app.get('*', (req, res) => {
   const sheets = new ServerStyleSheets();
