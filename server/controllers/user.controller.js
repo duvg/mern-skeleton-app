@@ -132,6 +132,10 @@ const addFollower = async (req, res) => {
 };
 
 
+const defaultPhoto = (req, res) => {
+  return res.sendFile(`${process.cwd()}${defaultImage}`)
+}
+
 
 const addFollowing = async (req, res, next) => {
   try {
@@ -156,6 +160,7 @@ const removeFollower = async (req, res) => {
       .populate('following', '_id name')
       .populate('followers', '__id name')
       .exec();
+
     res.json(result);
   } catch (err) {
     return res.status(400).json({
@@ -163,6 +168,8 @@ const removeFollower = async (req, res) => {
     });
   }
 };
+
+
 
 const removeFollowing = async (req, res, next) => {
   try {

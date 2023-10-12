@@ -30,7 +30,8 @@ const UserSchema = new mongoose.Schema([{
   updated: Date,
   hashed_password: {
     type: String,
-    required: 'Password is required'
+    required: 'Password is required',
+    max: 6,
   },
   salt: String,
   following:[{type: mongoose.Schema.ObjectId, ref: 'User'}],
