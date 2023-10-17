@@ -22,14 +22,12 @@ const create = async (req, res) => {
 
 const list = async (req, res) => {
   try {
-    let users = await User.find().select(
-      'name email updated created'
-    );
+    let users = await User.find().select('name email updated created');
     res.json(users);
   } catch (err) {
     return res.status('400').json({
       error: errorHandler.getErrorMessage(err)
-    });
+    })
   }
 };
 
@@ -50,11 +48,10 @@ const userById = async (req, res, next, id) => {
   } catch (err) {
     console.log(err);
     return res.status(400).json({
-      error: 'Could not retrieve user'
+      error: "Could not retrieve user"
     });
   }
 };
-
 const read = (req, res) => {
   req.profile.hashed_password = undefined;
   req.profile.salt = undefined;
@@ -93,7 +90,6 @@ const update = async (req, res) => {
     }
   });
 };
-
 const remove = async (req, res, next) => {
   try {
     console.log('deleted');
@@ -133,13 +129,12 @@ const addFollower = async (req, res) => {
 
 
 const defaultPhoto = (req, res) => {
-  return res.sendFile(`${process.cwd()}${defaultImage}`)
-}
-
+  return res.sendFile(`${process.cwd()}${defaultImage}`);
+};
 
 const addFollowing = async (req, res, next) => {
   try {
-    await User.findByIdAndUpdate(req.body.userId, {
+    await User.findByIdAndUpdate(req.body.userId,{
       $push: { following: req.body.followId }
     });
     next();
@@ -158,7 +153,7 @@ const removeFollower = async (req, res) => {
       { new: true }
     )
       .populate('following', '_id name')
-      .populate('followers', '__id name')
+      .populate('followers', '_id name')
       .exec();
 
     res.json(result);
@@ -173,8 +168,8 @@ const removeFollower = async (req, res) => {
 
 const removeFollowing = async (req, res, next) => {
   try {
-    await User.findByIdAndUpdate(req.body.userId, {
-      $pull: { follwing: req.body.unfollowId }
+    await User.findByIdAndUpdate( req.body.userId, {
+      $pull: { following: req.body.unfollowId }
     });
   } catch (err) {
     return res.status(400).json({

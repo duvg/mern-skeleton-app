@@ -15,13 +15,13 @@ const UserSchema = new mongoose.Schema([{
     math: [/.+\@.+\..+/, 'Please fill a valid email address'],
     required: 'Email is required'
   },
-  about : {
-    type: String,
-    trim: true
-  },
   photo: {
     data: Buffer,
     contentType: String
+  },
+  about: {
+    type: String,
+    trim: true
   },
   created: {
     type: Date,
@@ -31,24 +31,23 @@ const UserSchema = new mongoose.Schema([{
   hashed_password: {
     type: String,
     required: 'Password is required',
-    max: 6,
   },
   salt: String,
-  following:[{type: mongoose.Schema.ObjectId, ref: 'User'}],
-  followers:[{type: mongoose.Schema.ObjectId, ref: 'User'}]
+  following: [{ type: mongoose.Schema.ObjectId, ref: 'User' }],
+  followers: [{ type: mongoose.Schema.ObjectId, ref: 'User' }]
 }]);
 
 UserSchema.virtual('password')
-  .set(function(password){
+  .set(function (password) {
     this._password = password;
     this.salt = this.makeSalt();
     this.hashed_password = this.encryptPassword(password);
   })
-  .get(function(){
+  .get(function () {
     return this._password;
   });
 
-UserSchema.path('hashed_password').validate(function(v) {
+UserSchema.path('hashed_password').validate(function (v) {
   if (this._password && this._password.length < 6) {
     this.invalidate('password', 'Password must be at least 6 characters.')
   }
@@ -58,11 +57,11 @@ UserSchema.path('hashed_password').validate(function(v) {
 }, null)
 
 UserSchema.methods = {
-  authenticate: function(plainText) {
+  authenticate: function (plainText) {
     return this.encryptPassword(plainText) === this.hashed_password;
   },
-  encryptPassword: function(password) {
-    if(!password) return '';
+  encryptPassword: function (password) {
+    if (!password) return '';
     try {
       return crypto
         .createHmac('sha1', this.salt)
