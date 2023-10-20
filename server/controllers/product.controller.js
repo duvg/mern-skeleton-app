@@ -1,15 +1,15 @@
-import Category from '../models/category.model';
+import Product from '../models/product.model';
 import merge from 'lodash/merge';
 import errorHandler from './../helpers/dbErrorHandler';
 
-const create = async (req, res) => { 
-  const category = new Category(req.body);
+const create = async (req, res) => {
+  const product = new Product(req.body);
   try {
-    await category.save();
+    await product.save();
     return res.status(200).json({
-      message: 'Successfully signed up!'
+      message: 'Product saved Successfully!'
     });
-  } catch (err) { 
+  } catch (err) {
     return res.status(400).json({
       error: errorHandler.getErrorMessage(err)
     });
@@ -18,8 +18,8 @@ const create = async (req, res) => {
 
 const list = async (req, res) => {
   try {
-    let categories = await Category.find().select('name description updated created');
-    res.json(categories);
+    let products = await Product.find().select('name product updated created');
+    res.json(products);
   } catch (err) {
     return res.status('400').json({
       error: errorHandler.getErrorMessage(err)
@@ -27,36 +27,39 @@ const list = async (req, res) => {
   }
 };
 
-const categoryById = async (req, res, next, id) => { 
+const productById = async (req, res, next, id) => {
   try {
-    let category = await Category.findById({_id: id});
-    if(!category) {
+    let product = await Product.findById({_id: id});
+    if(!product) {
       return res.status(400).json({
-        error: 'Category not found'
+        error: 'Product not found'
       });
     }
-    req.profile = category;
+    req.profile = product;
     next();
-  } catch (err) { 
+  } catch (err) {
     console.log(err);
     return res.status(400).json({
-      error: "Could not retrieve category"
+      error: "Could not retrieve product"
     });
   }
 };
 
-const read = (req, res) => { 
+const read = (req, res) => {
+
   req.name = 'ss';
   return res.json(req.profile);
 };
 
 const update = async (req, res, next) => {
   try {
-    let category = req.profile;
-    category = merge(category, req.body);
-    category.updated = Date.now();
-    await category.save();
-    res.json(category);
+    let product = req.profile;
+    product = merge(product, req.body);
+
+    product.updated = Date.now();
+    await product.save();
+
+    res.json(product);
   } catch (err) {
     console.log(err);
     return res.status(400).json({
@@ -68,10 +71,10 @@ const update = async (req, res, next) => {
 const remove = async (req, res, next) => {
   try {
     console.log('deleted');
-    let category = req.profile;
-    console.log('category to remove', category);
-    let deletedCategory = await category.deleteOne();
-    res.json(deletedCategory);
+    let product = req.profile;
+    console.log('product to remove', product);
+    let deletedProduct = await product.deleteOne();
+    res.json(deletedProduct);
   } catch(err) {
     console.log(err);
     return res.status(400).json({
@@ -85,6 +88,6 @@ export default {
   list,
   read,
   remove,
-  categoryById,
+  productById,
   update
 };
