@@ -8,6 +8,10 @@ router.route('/api/products')
 .get(productCtrl.list)
 .post(productCtrl.create);
 
+router.route('/api/products/category')
+  .put(authCtrl.requireSignin,
+    productCtrl.addCategory)
+
 router.route('/api/products/:productId')
 .get(authCtrl.requireSignin, productCtrl.read)
 .put(authCtrl.requireSignin, authCtrl.hasAuthorization, productCtrl.update)

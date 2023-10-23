@@ -83,11 +83,30 @@ const remove = async (req, res, next) => {
   }
 };
 
+const addCategory = async (req, res) => {
+  try {
+    const result = await Product.findByIdAndUpdate(
+      req.body.productId,
+      { $push: { category: req.body.categoryId } },
+      { new: true }
+    )
+      .populate('category', '_id name')
+      .exec();
+    result.salt = undefined;
+    res.json(result);
+  } catch (err) {
+    return res.status(400).json({
+      error: errorHandler.getErrorMessage(err)
+    });
+  }
+};
+
 export default {
   create,
   list,
   read,
   remove,
   productById,
-  update
+  update,
+  addCategory
 };

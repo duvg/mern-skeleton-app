@@ -16,14 +16,14 @@ const ProductSchema = new mongoose.Schema([{
     index: true,
     required: 'price is required'
   },
+  updated: Date,
+  salt: String,
+
   category:{
     type: mongoose.Schema.ObjectId,
     ref:'Category'
   },
 
-  updated: Date,
-
-  salt: String
 }]);
 
 export default mongoose.model('Product', ProductSchema);
