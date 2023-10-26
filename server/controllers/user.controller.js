@@ -52,6 +52,7 @@ const userById = async (req, res, next, id) => {
     });
   }
 };
+
 const read = (req, res) => {
   req.profile.hashed_password = undefined;
   req.profile.salt = undefined;
@@ -90,6 +91,7 @@ const update = async (req, res) => {
     }
   });
 };
+
 const remove = async (req, res, next) => {
   try {
     console.log('deleted');
@@ -163,8 +165,6 @@ const removeFollower = async (req, res) => {
     });
   }
 };
-
-
 
 const removeFollowing = async (req, res, next) => {
   try {

@@ -8,11 +8,24 @@ router.route('/api/posts')
 .get(postCtrl.list)
 .post(postCtrl.create);
 
-router.route('/api/posts/:postId')
-  .get(authCtrl.requireSignin, userCtrl.read)
-  .put(authCtrl.requireSignin, authCtrl.hasAuthorization, userCtrl.update)
-  .delete(authCtrl.requireSignin, authCtrl.hasAuthorization, userCtrl.remove);
+router.route('/api/posts/comment')
+.put(authCtrl.requireSignin,
+  postCtrl.addComment);
 
-  router.param('userId', postCtrl.postById);
+router.route('/api/posts/like')
+.put(authCtrl.requireSignin,
+  postCtrl.addLike);
+
+router.route('/api/posts/uncomment')
+  .put(authCtrl.requireSignin,
+    postCtrl.removeComment,
+    postCtrl.removeLike)
+
+router.route('/api/posts/:postId')
+  .get(authCtrl.requireSignin, postCtrl.read)
+  .put(authCtrl.requireSignin, authCtrl.hasAuthorization, postCtrl.update)
+  .delete(authCtrl.requireSignin, authCtrl.hasAuthorization, postCtrl.remove);
+
+router.param('postId', postCtrl.postById);
 
 export default router;

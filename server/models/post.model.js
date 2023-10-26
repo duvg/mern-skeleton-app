@@ -9,13 +9,15 @@ const PostSchema = new mongoose.Schema([{
     description: {
         type: String,
         trim: true
-    }, 
+    },
     created: {
         type: Date,
         default: Date.now
     },
     update: Date,
     salt: String,
+    like: [{ type: mongoose.Schema.ObjectId, ref: 'Post' }],
+    comment: [{ type: mongoose.Schema.ObjectId, ref: 'Post' }]
 }])
 
 export default mongoose.model('Post', PostSchema);
