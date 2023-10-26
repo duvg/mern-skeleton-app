@@ -1,5 +1,6 @@
-import mongoose from 'mongoose';
+import mongoose, { mongo } from 'mongoose';
 import crypto from 'crypto';
+import { type } from 'os';
 
 const UserSchema = new mongoose.Schema([{
   name: {
@@ -34,7 +35,7 @@ const UserSchema = new mongoose.Schema([{
   },
   salt: String,
   following: [{ type: mongoose.Schema.ObjectId, ref: 'User' }],
-  followers: [{ type: mongoose.Schema.ObjectId, ref: 'User' }]
+  followers: [{ type: mongoose.Schema.ObjectId, ref: 'User' }],
 }]);
 
 UserSchema.virtual('password')

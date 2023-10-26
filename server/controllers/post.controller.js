@@ -84,25 +84,7 @@ const remove = async (req, res, next) => {
   }
 };
 
-const addPost = async (req, res) => {
-  try {
-    const result = await Post.findByIdAndUpdate(
-      req.body.postId,
-      { $push: { posts: req.body.postId } },
-      { new: true }
-    )
-      .populate('comment', '_id name')
-      .populate('like', '_id name')
-      .exec();
-    res.json(result);
-  } catch (err) {
-    return res.status(400).json({
-      error: errorHandler.getErrorMessage(err)
-    });
-  }
-};
-
-const addLike = async(req, res) => {
+const addLike = async (req, res) => {
   try {
     const result = await Post.findByIdAndUpdate(
       req.body.likeId,
@@ -128,8 +110,6 @@ const addComment = async (req, res) => {
     )
     .populate('comments', '_id title')
     .exec();
-    result.hashed_password = undefined;
-    result.salt = undefined;
     res.json(result);
   } catch(err) {
     return res.status(400).json({
@@ -181,7 +161,6 @@ export default {
   remove,
   postById,
   update,
-  addPost,
   addLike,
   addComment,
   removeLike,
