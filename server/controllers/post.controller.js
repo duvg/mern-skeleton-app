@@ -105,11 +105,12 @@ const addComment = async (req, res) => {
   try {
     const result = await Post.findByIdAndUpdate(
       req.body.commentId,
-      { $push: { comments: req.body.postId } },
+      // { $push: { comment: req.body.postId } },
       { new: true }
     )
     .populate('comments', '_id title')
     .exec();
+    console.log(result)
     res.json(result);
   } catch(err) {
     return res.status(400).json({

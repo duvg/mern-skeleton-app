@@ -10,16 +10,11 @@ const PostSchema = new mongoose.Schema([{
         type: String,
         trim: true
     },
-    created: {
-        type: Date,
-        default: Date.now
-    },
-    update: Date,
-    salt: String,
+  
 
-    // user: [{ type: mongoose.Schema.ObjectId, ref: 'User' }],
+    user: [{ type: mongoose.Schema.ObjectId, ref: 'User' }],
     // like: [{ type: mongoose.Schema.ObjectId, ref: 'Post' }],
-    comment: { type: mongoose.Schema.ObjectId, ref: 'Post' }
-}])
+    // comment: { type: mongoose.Schema.ObjectId, ref: 'Comment' }
+}], {timestamps: true})
 
 export default mongoose.model('Post', PostSchema);

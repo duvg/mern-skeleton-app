@@ -12,7 +12,8 @@ const CommentSchema = new mongoose.Schema([{
     },
     updated: Date,
 
-    post: { type: mongoose.Schema.ObjectId, ref: 'Post' }
+    post: { type: mongoose.Schema.ObjectId, ref: 'Post' },
+    user: { type: mongoose.Schema.ObjectId, ref: 'User' }
 }]);
 
 export default mongoose.model('Comment', CommentSchema)
