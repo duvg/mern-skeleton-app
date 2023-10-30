@@ -23,7 +23,7 @@ import userRoutes from './routes/user.routes';
 import categoryRoutes from './routes/category.routes';
 import productRoutes from './routes/product.routes';
 import postRoutes from './routes/post.routes';
-import commentRoutes from './routes/comment.routes';
+import commentRoutes from './routes/comment.routes'
 
 
 import Template from './../template';
@@ -46,7 +46,8 @@ app.use('/', userRoutes);
 app.use('/', categoryRoutes);
 app.use('/', productRoutes);
 app.use('/', postRoutes);
-app.use('/', commentRoutes);
+app.use('/', commentRoutes)
+
 
 
 

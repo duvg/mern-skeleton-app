@@ -5,24 +5,16 @@ import authCtrl from '../controllers/auth.controller';
 const router = express.Router();
 
 router.route('/api/comments')
-.post(commentCtrl.create)
-.get(commentCtrl.list);
+  .get(commentCtrl.list) 
+  .post(commentCtrl.create);
+  
+router.route('/api/comments/like')
+.put(commentCtrl.addlikeComment);
 
-router.route('/api/comment/post')
-.put(authCtrl.requireSignin,
-  commentCtrl.addComment);
+router.route('/api/comments/unlike')
+.put(commentCtrl.addunlikeComment);
 
-
-// router.route('/api/comment/like')
-// .put(authCtrl.requireSignin,
-//   commentCtrl.addLike);
-
-// router.route('/api/posts/uncomment')
-//   .put(authCtrl.requireSignin,
-//     commentCtrl.removeComment,
-//     commentCtrl.removeLike)
-
-router.route('/api/comment/:commentId')
+router.route('/api/comments/:commentId')// Para editar, eliminar y actualizar
   .get(authCtrl.requireSignin, commentCtrl.read)
   .put(authCtrl.requireSignin, authCtrl.hasAuthorization, commentCtrl.update)
   .delete(authCtrl.requireSignin, authCtrl.hasAuthorization, commentCtrl.remove);

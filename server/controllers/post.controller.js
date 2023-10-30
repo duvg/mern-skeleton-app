@@ -16,9 +16,12 @@ const create = async (req, res) => {
   }
 };
 
+
+
+
 const list = async (req, res) => {
   try {
-    let posts = await Post.find().select('name description updated created');
+    let posts = await Post.find().select('name description comment like create updated created');
     res.json(posts);
   } catch (err) {
     return res.status('400').json({
@@ -54,19 +57,36 @@ const read = (req, res) => {
   return res.json(req.profile);
 };
 
-const update = async (req, res, next) => {
+const update = async (req, res) => {
+  const form = new formidable.IncomingForm();
+  form.keepExtension = true;
+  form.parse(req, async (err, fields, files) => {
   try {
+    if (err) {
+      return res.status(400).json({
+        error: 'Photo could not be uploaded'
+      });
+    }
+
     let post = req.profile;
-    post = merge(post, req.body);
+    post = extend(post, fields);
     post.updated = Date.now();
+
+    if (files.photo) {
+      post.photo.data =fs.readFileSync(files.photo.filepath);
+      post.photo.contentType = files.photo.type;
+      }
     await post.save();
-    res.json(post);
+
+
+    res.json({ post });
   } catch (err) {
-    console.log(err);
     return res.status(400).json({
-      error: errorHandler.getErrorMessage(err)
-    });
-  }
+      error: errorHandler.getErrorMessage('error', err)
+     });
+
+    }
+  });
 };
 
 const remove = async (req, res, next) => {
@@ -84,86 +104,79 @@ const remove = async (req, res, next) => {
   }
 };
 
-const addLike = async (req, res) => {
+
+const addCommentToPost = async (req, res) => {
   try {
-    const result = await Post.findByIdAndUpdate(
-      req.body.likeId,
-      { $push: { likes: req.body.likeId } },
-      {new: true}
-    )
-    .populate('like', '_id title')
-    .exec();
-    res.json(result);
-  } catch (err) {
+    const post = await Post.findById(postId)
+      .populate('comments', '_id') 
+      .exec();
+    if (!post) {
+      return res.status(404).json({ 
+        error: 'Post not found' 
+      });
+    }
+    post.comments.push(commentId);// Agrega el commentId a los comentarios del post
+    await post.save();//actualiza el post actualizado en la base de datos
+    return res.status(200).json({
+      message: 'Comment successfully added!'
+    });
+  } catch (err) { // si la operación falla ejecuta estos procedimientos
     return res.status(400).json({
       error: errorHandler.getErrorMessage(err)
     });
   }
-}
+};
 
-const addComment = async (req, res) => {
+
+const addlikePost = async (req, res) => {
   try {
-    const result = await Post.findByIdAndUpdate(
-      req.body.commentId,
-      // { $push: { comment: req.body.postId } },
+    const { userId, postId } = req.body;
+    const updatedComment = await Post.findByIdAndUpdate(
+      postId,
+      { $addToSet: { likes: userId } }, 
       { new: true }
-    )
-    .populate('comments', '_id title')
-    .exec();
-    console.log(result)
-    res.json(result);
-  } catch(err) {
+    );
+    res.json(updatedComment);
+  } catch (err) {
     return res.status(400).json({
       error: errorHandler.getErrorMessage(err)
     });
   }
 };
 
-const removeComment = async (req, res) => {
-  try {
-    const result = await Comment.findByIdAndUpdate(
-      req.body.uncommentId,
-      { $pull: { comments: req.body.postId } },
-      {  new: true }
-    )
-      .populate('comments', '_id title')
-      .exec();
 
-    res.json(result);
+const defaultPhoto = (req, res) => {
+  return res.sendFile(`${process.cwd()}${defaultImage}`);
+};
+
+
+
+const addunlikePost = async (req, res) => {
+  try {
+    const { userId, postId } = req.body;
+    const updatedComment = await Post.findByIdAndUpdate(
+      postId,
+      { $pull: { likes: userId } },
+      { new: true }
+    );
+    res.json(updatedComment);
   } catch (err) {
     return res.status(400).json({
-      error: errorHandler.getErrorMessage()
+      error: errorHandler.getErrorMessage(err)
     });
   }
 };
 
-const removeLike = async (req, res) => {
-  try {
-    const result = await Like.findByIdAndUpdate(
-      req.body.unlikeId,
-      { $pull: { likes: req.body.likeId } },
-      {  new: true}
-    )
-      .populate('like', '_id name')
-      .exec();
-
-    res.json(result);  
-  } catch (err) {
-    return res.status(400).json({
-      error: errorHandler.getErrorMessage()
-    });
-  }
-};
 
 export default {
   create,
   list,
   read,
-  remove,
   postById,
+  remove,
   update,
-  addLike,
-  addComment,
-  removeLike,
-  removeComment,
+  addCommentToPost,
+  defaultPhoto,
+  addlikePost,
+  addunlikePost
 };
