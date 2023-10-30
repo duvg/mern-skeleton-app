@@ -18,7 +18,7 @@ const create = async (req, res) => {
 
 const list = async (req, res) => {
   try {
-    let categories = await User.find().select('name email updated created');
+    const categories = await User.find().select('name email updated created');
     res.json(categories);
   } catch (err) {
     return res.status('400').json({

@@ -1,6 +1,4 @@
-import mogoose from 'mongoose';
-
-
+import mongoose from 'mongoose';
 
 const ProductSchema = new mongoose.Schema([{
   name: {
@@ -19,8 +17,16 @@ price: {
   type: Number,
   trim: true,
 required: 'Price is required'
+},
+
+category: {
+  type: mongoose.Schema.ObjectId,
+  ref: 'Category',
+required: 'Category is required'
+
 }
+
 
 }]);
 
-export default mogoose.model('Product', ProductSchema);
+export default mongoose.model('Product', ProductSchema);
