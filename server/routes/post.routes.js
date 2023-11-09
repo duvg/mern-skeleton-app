@@ -1,30 +1,17 @@
 import express from 'express';
-import postCtrl from '../controllers/post.controller';
 import authCtrl from '../controllers/auth.controller';
-
+import userCtrl from '../controllers/user.controller';
+import postCtrl from '../controllers/post.controller';
 const router = express.Router();
-
-router.route('/api/posts')
-  .get(postCtrl.list) //Obtener el listado de usuarios
-  .post(postCtrl.create);
-
-  router.route('/api/posts/addcomment')
-  .post(postCtrl.addCommentToPost);
-
-  router.route('/api/posts/defaultphoto')
-  .get(postCtrl.defaultPhoto);
-
-  router.route('/api/posts/like') //dar like al post
-  .put(postCtrl.addlikePost);
-  
-  router.route('/api/posts/unlike')// quitar el like al post
-  .put(postCtrl.addunlikePost);
-  
-router.route('/api/posts/:postId')// Para editar, eliminar y actualizar
-  .get(authCtrl.requireSignin, postCtrl.read)
-  .put(authCtrl.requireSignin, authCtrl.hasAuthorization, postCtrl.update)
-  .delete(authCtrl.requireSignin, authCtrl.hasAuthorization, postCtrl.remove);
-
-router.param('postId', postCtrl.postById);// A todas las rutas de usuarios con user_id, se encarga automaticamente de buscar esos usuarios por esa ruta.
-
+router.route('/api/posts/feed/:userId').get(authCtrl.requireSignin, postCtrl.listNewsFeed);
+router.route('/api/posts/by/:userId').get(authCtrl.requireSignin, postCtrl.listByUser);
+router.route('/api/posts/new/:userId').post(authCtrl.requireSignin, postCtrl.create);
+router.route('/api/posts/photo/:postId').get(postCtrl.photo);
+router.route('/api/posts/like').put(authCtrl.requireSignin, postCtrl.like);
+router.route('/api/posts/unlike').put(authCtrl.requireSignin, postCtrl.unlike);
+router.route('/api/posts/:postId').delete(authCtrl.requireSignin, postCtrl.isPoster, postCtrl.remove);
+router.route('/api/posts/comment').put(authCtrl.requireSignin, postCtrl.comment);
+router.route('/api/posts/uncomment').put(authCtrl.requireSignin, postCtrl.uncomment);
+router.param('userId', userCtrl.userById);
+router.param('postId', postCtrl.postById);
 export default router;

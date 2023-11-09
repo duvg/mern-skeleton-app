@@ -1,59 +1,37 @@
-import mongoose from 'mongoose';
+import mongoose, { mongo } from "mongoose";
 
-// const commentSchema = new mongoose.Schema([{
-//     comments: {
-//         type: String,
-//         trim: true
-//     },
-//     user: { type: mongoose.Schema.ObjectId, ref: 'User' },
-//     post: { type: mongoose.Schema.ObjectId, ref: 'Post' }
-// }],  {timestamps: true})
-
-const require = 'field is required';
-
-const PostSchema = new mongoose.Schema([{
-
-    title: {
-        type: String,
-        trim: true,
-        required: `Title ${require}`
-    },
-
-    photo: {
-        data: Buffer,
-        contentType: String
-    },
-
-    description:{
-        type: String,
-        trim: true,
-        required: `Title ${require}`
-    },
-
-    user: [{
-        type: mongoose.Schema.ObjectId, 
-        ref: 'User'}],
-        
+const PostSchema = new mongoose.Schema({
+  text: {
+    type: String,
+    required: 'Test is required'
+  },
+  photo: {
+    data: Buffer,
+    contentType: String
+  },
+  postedBy: {
+    type: mongoose.Schema.ObjectId,
+    ref: 'User'
+  },
+  created: {
+    type: Date,
+    default: Date.now
+  },
+  likes: [{
+    type: mongoose.Schema.ObjectId,
+    ref: 'User'
+  }],
+  comments: [{
+    text: String,
     created: {
-        type: Date,
-        default: Date.now 
+      type: Date,
+      default: Date.now
     },
-    
-    updated: Date, String,
-    
-    salt: String,
-    
-    comments: [
-        {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: 'Comment', // Referencia al modelo de Comment
-        },
-      ],
+    postedBy: {
+      type: mongoose.Schema.ObjectId,
+      ref: 'User'
+    }
+  }]
+})
 
-    likes: [{ type: mongoose.Schema.Types.ObjectId,ref: 'User'}],
-    
-
-  }]);
-
-export default mongoose.model('Post', PostSchema);
-
+export default mongoose.model('Post', PostSchema)
