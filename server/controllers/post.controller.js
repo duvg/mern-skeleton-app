@@ -156,6 +156,42 @@ const photo = (req, res, next) => {
   return res.send(req.post.photo.data);
 };
 
+const editPost = async (req, res) => {
+  try {
+    
+    const postId = req.params.postId;
+
+    const post = await Post.findById(postId);
+
+    if (!post) {
+      return res.status(404).json({ 
+        error: 'Post not found' 
+      });
+    }
+
+    if (post.user !== req.user._id) {
+      return res.status(403).json({ 
+        error: 'No tienes permiso para editar este post.' 
+      });
+    }
+
+    post.title = req.body.title;
+    post.description = req.body.description;
+
+    await post.save();
+
+    return res.status(200).json({ 
+      message: 'Successfully edited!' 
+    });
+  } catch (error) {
+   
+    console.error(error); 
+    
+    return res.status(500).json({
+      message: 'No se pudo editar el post'
+    });
+  }
+};
 
 const remove = async (req, res) => {
   let post = req.post;
@@ -181,5 +217,6 @@ export default {
   postById,
   remove,
   uncomment,
-  unlike
+  unlike,
+  editPost
 };

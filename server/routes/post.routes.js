@@ -7,6 +7,7 @@ router.route('/api/posts/feed/:userId').get(authCtrl.requireSignin, postCtrl.lis
 router.route('/api/posts/by/:userId').get(authCtrl.requireSignin, postCtrl.listByUser);
 router.route('/api/posts/new/:userId').post(authCtrl.requireSignin, postCtrl.create);
 router.route('/api/posts/photo/:postId').get(postCtrl.photo);
+router.route('/api/post/edit/:userId').put(authCtrl.requireSignin, postCtrl.editPost);
 router.route('/api/posts/like').put(authCtrl.requireSignin, postCtrl.like);
 router.route('/api/posts/unlike').put(authCtrl.requireSignin, postCtrl.unlike);
 router.route('/api/posts/:postId').delete(authCtrl.requireSignin, postCtrl.isPoster, postCtrl.remove);
